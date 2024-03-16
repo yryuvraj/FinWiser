@@ -17,7 +17,7 @@ sidebar_main = st.sidebar.selectbox('Navigation', ['Home', 'See Finances', 'Edit
  
 if sidebar_main == 'Home' : 
     st.title('Personal Finance Dashboard')
-
+    st.subheader("Please head over and set your monthly budget. (Ignore if already done)")
     banner = md.headerSection()
     st.markdown(banner,unsafe_allow_html=True)
     
@@ -146,15 +146,15 @@ elif sidebar_main == 'Edit Monthly Income' :
     invest_amt = 0
     use_amt = 0
     save_amt = 0
-    if monthly_income > 100000:
+    if monthly_income >= 100000:
         invest_amt = 0.5 * monthly_income
         use_amt = 0.3 * monthly_income
         save_amt = 0.2 * monthly_income
-    elif monthly_income > 60000 and monthly_income < 100000:
+    elif monthly_income >= 60000 and monthly_income < 100000:
         invest_amt = 0.3 * monthly_income
         use_amt = 0.5 * monthly_income
         save_amt = 0.2 * monthly_income
-    elif monthly_income > 30000 and monthly_income < 60000:
+    elif monthly_income >= 30000 and monthly_income < 60000:
         invest_amt = 0.2 * monthly_income
         use_amt = 0.5 * monthly_income
         save_amt = 0.3 * monthly_income
