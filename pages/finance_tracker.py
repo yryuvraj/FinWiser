@@ -2,6 +2,7 @@ import streamlit as st
 from pages.finance_tracker_data.finance import PersonalFinance
 import pages.finance_tracker_data.markdown as md
 from csv import writer
+from csv import reader
 from datetime import datetime
 df = PersonalFinance()
  
@@ -42,9 +43,25 @@ if sidebar_main == 'Home' :
             writer_object = writer(f_object)
             writer_object.writerow(L)
             f_object.close()
-            print("Written da data")
-        
-
+        lines = []
+        with open('pages/data/income.csv', mode ='r') as file:
+            csvFile = reader(file)
+            for lines in csvFile:
+                    continue
+            print(lines)
+        lines[3] = float(lines[3])
+        lines[3] -= L[3]
+        with open('pages/data/income.csv', 'w') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerow(['income','invest_amt','save_amt','spend_amt'])
+            writer_object.writerow(lines)
+            f_object.close()
+        lines = []
+        with open('pages/data/income.csv', mode ='r') as file:
+            csvFile = reader(file)
+            for lines in csvFile:
+                    continue
+        st.subheader(f"The money you can spend this month is : {lines[3]}")
 
  
 elif sidebar_main == 'Window 1' : 
