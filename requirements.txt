@@ -11,7 +11,11 @@ cachetools==5.3.3
 certifi==2024.2.2
 charset-normalizer==3.3.2
 click==8.1.7
-feedparser==6.0.11
+contourpy==1.2.0
+cycler==0.12.1
+dateparser==0.7.6
+feedparser==6.0.0
+fonttools==4.50.0
 frozendict==2.4.0
 frozenlist==1.4.1
 gitdb==4.0.11
@@ -22,9 +26,11 @@ Jinja2==3.1.3
 joblib==1.3.2
 jsonschema==4.21.1
 jsonschema-specifications==2023.12.1
+kiwisolver==1.4.5
 lxml==5.1.0
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
+matplotlib==3.8.3
 mdurl==0.1.2
 multidict==6.0.5
 multitasking==0.0.11
@@ -40,6 +46,8 @@ protobuf==4.25.3
 pyarrow==15.0.1
 pydeck==0.8.1b0
 Pygments==2.17.2
+pygooglenews==0.1.2
+pyparsing==3.1.2
 python-dateutil==2.9.0.post0
 pytz==2024.1
 referencing==0.33.0
@@ -60,6 +68,7 @@ tornado==6.4
 tqdm==4.66.2
 typing_extensions==4.10.0
 tzdata==2024.1
+tzlocal==5.2
 urllib3==2.2.1
 watchdog==4.0.0
 webencodings==0.5.1

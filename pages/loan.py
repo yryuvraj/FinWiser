@@ -1,5 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
+from csv import writer
+from csv import reader
 
 st.header("Learn how your finances will be impacted if you take a new loan: ")
 goal = st.text_input("Enter loan title : ")
@@ -16,8 +18,18 @@ if P != 0 and goal and interest != 0:
     if n != 0:
         emi = P * interest * (((1 + interest)**n)/(((1+interest)**n)-1))
     amt_owned = emi + P
-    st.markdown(f"###  Estimated Monthly installment : {int(emi)}")
-    st.markdown(f"###  Total Amount you will owe the lender will be : {int(amt_owned)}")
+    butt = st.button("Calculate")
+    if butt:
+        st.markdown(f"###  Estimated Monthly installment : {int(emi)}")
+        st.markdown(f"###  Total Amount you will owe the lender will be : {int(amt_owned)}")
+        with open('pages/data/income.csv', mode ='r') as file:
+            csvFile = reader(file)
+            for lines in csvFile:
+                    continue
+            print(lines)
+        lines[3] = float(lines[3])
+        st.markdown(f"###  Total Amount which will be left this month : {lines[3]-float(emi)}")
+    
 
 labels = ['Home','Electricity','Groceries']
 if goal:
