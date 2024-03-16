@@ -8,7 +8,7 @@ import numpy as np
 
 #st.write('this tool helps you keep trackof your sip monthly investment amount and how your interest grows with time :sunglasses:')
 
-st.image('sip-header.png')
+st.image('assets/sip-header.png')
 
 _LOREM_IPSUM = "Supp! Ever wondered how to make your money work for you while you sip on your coffee? \n this tool helps you keep trackof your sip monthly investment amount and how your interest grows with time :sunglasses:"
 
@@ -48,6 +48,6 @@ for i in range(int(number_of_months)):
     future_value *= (1 + monthly_rate)
 #future_value = monthly_investment * ((((1 + monthly_rate)**(number_of_months))-1) * (1 + monthly_rate))/monthly_rate
 
-st.write("amount invested", monthly_investment, "\n expected return rate", return_rate, "\n time period", time_period)
-st.write("future value of investment", future_value)
-st.write("total investment", monthly_investment * number_of_months)
+st.markdown(f"## Amount invested per month: ₹{monthly_investment} \n ## Expected return rate: {return_rate}%\n ## Time period: {time_period} years")
+st.markdown(f"## Future value of investment:  ₹{int(future_value)}")
+st.markdown(f"## Total investment: ₹{monthly_investment * number_of_months}")
