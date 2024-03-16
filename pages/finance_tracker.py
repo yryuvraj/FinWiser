@@ -4,7 +4,6 @@ import markdown as md
 df = PersonalFinance()
  
 PAGE_CONFIG = {"page_title":"Personal Finance", 
-            #    "page_icon":image, 
                "layout":"centered", 
                "initial_sidebar_state":"auto"}
 
@@ -18,9 +17,7 @@ if sidebar_main == 'Home' :
     st.markdown("""
         ##### text here
     """)
-    
-    # * unable to use direct images due to library issue 
-    # st.image('static/compressed_heroimage.gif', caption = 'Personal Finance')
+
     banner = md.headerSection()
     st.markdown(banner,unsafe_allow_html=True)
     
@@ -58,7 +55,6 @@ elif sidebar_main == 'Window 1' :
         
         if monthly : 
             st.plotly_chart(df.plot_expenses('month')[0])
-            # st.dataframe(df.plot_expenses('month')[2])
             percent = df.plot_expenses('month')[1]
 
             if percent > 0 : 
