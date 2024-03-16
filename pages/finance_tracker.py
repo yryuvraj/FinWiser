@@ -1,6 +1,6 @@
 import streamlit as st
-from finance import PersonalFinance
-import markdown as md
+from pages.finance_tracker_data.finance import PersonalFinance
+import pages.finance_tracker_data.markdown as md
 df = PersonalFinance()
  
 PAGE_CONFIG = {"page_title":"Personal Finance", 
