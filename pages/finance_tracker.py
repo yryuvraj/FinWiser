@@ -33,7 +33,11 @@ if sidebar_main == 'Home' :
      'Choose type of expense: ',
      ('Charity', 'Clothes', 'Food','Medicine','Study Materials','Travel',"Utilities","Wants"))
     item_title = st.text_input("Enter name of expense : ")
+    if item_title == '':
+        st.warning('Please enter the name of expense')
     item_price = st.number_input("Enter cost of expense : ")
+    if item_price <=0:
+        st.warning('Please enter a valid cost of expense')
     submit = st.button("Submit")
     L = [item_date,option,item_title,item_price]
     print(L)
