@@ -11,9 +11,9 @@ PAGE_CONFIG = {"page_title":"Personal Finance",
                "initial_sidebar_state":"auto"}
 
 st.set_page_config(**PAGE_CONFIG)   
-
+months = [31,29,31,30,31,30,31,31,30,31,30,31]
 st.sidebar.markdown("## Options")
-sidebar_main = st.sidebar.selectbox('Navigation', ['Home', 'Window 1', 'Window 2', 'Window 3'])
+sidebar_main = st.sidebar.selectbox('Navigation', ['Home', 'See Finances', 'Edit Monthly Income'])
  
 if sidebar_main == 'Home' : 
     st.title('Personal Finance Dashboard')
@@ -27,6 +27,10 @@ if sidebar_main == 'Home' :
     #item_date = st.date_input("Enter date of expense : ")
     now = datetime.now()
     item_date = now.strftime("%m/%d/%Y")
+    day = now.strftime("%d")
+    month = now.strftime('%m')
+    print("month is : ",month)
+    print("day:", day)
     print(item_date)
     
     option = st.selectbox(
@@ -65,10 +69,13 @@ if sidebar_main == 'Home' :
             csvFile = reader(file)
             for lines in csvFile:
                     continue
-        st.subheader(f"The money you can spend this month is : {lines[3]}")
+        st.subheader(f"Your daily budget is : {round(float(lines[3])/(months[0] - int(day)),1)}")
+        st.subheader(f"The money you can spend this month is : {round(float(lines[3]),1)}")
+        if float(lines[3]) < 0:
+            st.subheader("You are over your budget!")
 
  
-elif sidebar_main == 'Window 1' : 
+elif sidebar_main == 'See Finances' : 
     st.title('Expense dashboard')
     sidebar_sub = st.sidebar.radio('Navigation', ['Expense', 'Category', 'boxplot', 'total expenses', 'treemap'])
     
@@ -80,7 +87,7 @@ elif sidebar_main == 'Window 1' :
             """
         )
     st.dataframe(data.head())
-    if sidebar_sub == 'Window 2' : 
+    if sidebar_sub == 'See Finances' : 
 
         st.markdown(
             """
@@ -155,23 +162,27 @@ elif sidebar_main == 'Window 1' :
         ) 
         st.plotly_chart(df.plot_treemap())
 
-elif sidebar_main == 'Window 3' : 
+elif sidebar_main == 'Edit Monthly Income' : 
     monthly_income = st.number_input("Enter monthly income : ")
     invest_amt = 0
     use_amt = 0
     save_amt = 0
-    if monthly_income > 200000:
+    if monthly_income > 100000:
         invest_amt = 0.5 * monthly_income
         use_amt = 0.3 * monthly_income
         save_amt = 0.2 * monthly_income
-    elif monthly_income > 150000 and monthly_income < 200000:
+    elif monthly_income > 60000 and monthly_income < 100000:
         invest_amt = 0.3 * monthly_income
         use_amt = 0.5 * monthly_income
         save_amt = 0.2 * monthly_income
-    elif monthly_income < 150000:
+    elif monthly_income > 30000 and monthly_income < 60000:
         invest_amt = 0.2 * monthly_income
         use_amt = 0.5 * monthly_income
         save_amt = 0.3 * monthly_income
+    else:
+        invest_amt = 0.2 * monthly_income
+        use_amt = 0.6 * monthly_income
+        save_amt = 0.2 * monthly_income
     st.subheader(f"You should invest {int(invest_amt)}")
     st.subheader(f"You should save {int(save_amt)}")
     st.subheader(f"You should spend {int(use_amt)}")
