@@ -2,7 +2,9 @@ import time
 import streamlit as st
 import pandas as pd
 import numpy as np
-
+import pandas as pd
+data = pd.read_csv('pages/data/income.csv')
+max_investment_value = int(data['invest_amt'])
 
 #st.subheader('Supp! Ever wondered how to make your money work for you while you sip on your coffee? ')
 
@@ -22,7 +24,7 @@ def stream_data():
 if st.button("SiP SiP :coffee:"):
         st.write_stream(stream_data)
 
-monthly_investment = st.slider("monthly investment", min_value = 500, max_value = 20000, step = 500)
+monthly_investment = st.slider("monthly investment", min_value = 500, max_value = max_investment_value, step = 500)
 
 
 return_rate = st.slider("expected annual return rate", min_value = 1, max_value = 30, step = 1)
@@ -51,3 +53,8 @@ for i in range(int(number_of_months)):
 st.markdown(f"### Amount invested per month: ₹{monthly_investment} \n ### Expected return rate: {return_rate}%\n ### Time period: {time_period} years")
 st.markdown(f"### Future value of investment:  ₹{int(future_value)}")
 st.markdown(f"### Total investment: ₹{monthly_investment * number_of_months}")
+
+#update data['invest_amt'] to invest_amt - monthly_investment
+data['invest_amt'] = int(data['invest_amt']) - monthly_investment
+
+st.markdown(f"### After investing to sip you have: ₹{int(data['invest_amt'])} left to invest")
