@@ -7,5 +7,6 @@ st.set_page_config(
     initial_sidebar_state="expanded")
 st.image("assets/logo.png")
 st.header("FinWiser: The all inclusive financial literacy application")
+st.image('assets/pyramid.png')
 
 

@@ -8,7 +8,7 @@ import numpy as np
 
 #st.write('this tool helps you keep trackof your sip monthly investment amount and how your interest grows with time :sunglasses:')
 
-st.image('sip-header.png')
+st.image('assets/sip-header.png')
 
 _LOREM_IPSUM = "Supp! Ever wondered how to make your money work for you while you sip on your coffee? \n this tool helps you keep trackof your sip monthly investment amount and how your interest grows with time :sunglasses:"
 
