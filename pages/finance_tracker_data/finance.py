@@ -16,8 +16,8 @@ class PersonalFinance :
     
     def __init__(self) : 
 
-        self.main_data = 'data/data  - item.csv'
-        self.additional_data = 'data/data  - Total_spending.csv'
+        self.main_data = 'pages/data/data  - item.csv'
+        self.additional_data = 'pages/data/data  - Total_spending.csv'
 
 
     def read_data(self, data) : 
