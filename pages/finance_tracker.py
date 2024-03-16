@@ -77,7 +77,7 @@ if sidebar_main == 'Home' :
  
 elif sidebar_main == 'See Finances' : 
     st.title('Expense dashboard')
-    sidebar_sub = st.sidebar.radio('Navigation', ['Expense', 'Category', 'boxplot', 'total expenses', 'treemap'])
+    sidebar_sub = st.sidebar.radio('Navigation', ['Expense', 'Category'])
     
     data = df.preprocess_dataframe().tail()
 
@@ -122,28 +122,7 @@ elif sidebar_main == 'See Finances' :
         ) 
         st.plotly_chart(df.share_of_category())
 
-    elif sidebar_sub == 'boxplot' : 
-        st.markdown(
-            """
-            ##### Category wise boxplot 
-            """
-        ) 
-        col1, col2, col3 = st.columns(3)
-        with col1 : 
-            food = st.button('food') 
-
-        with col2 :  
-            travel = st.button('travel')
-        
-        with col3 :  
-            wants = st.button('wants')
-
-        if travel :
-            st.plotly_chart(df.plot_boxplot('travel'))
-        if wants :
-            st.plotly_chart(df.plot_boxplot('wants'))
-        else: 
-            st.plotly_chart(df.plot_boxplot('food'))
+    
 
     elif sidebar_sub == 'total expenses' : 
         st.markdown(
