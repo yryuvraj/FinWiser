@@ -26,7 +26,7 @@ st.header("Candle Stick Chart")
 x.update_layout(title="Candlestick Chart")
 st.plotly_chart(x)
 
-pricing_data, fundatmental_data, news, tech_indicator= st.tabs(["Pricing Data", "Fundamental Data", "News", "Technical Indicators"])
+pricing_data, news, tech_indicator= st.tabs(["Pricing Data", "News", "Technical Indicators"])
 
 with pricing_data:
     st.header("Price Movements")
@@ -43,26 +43,26 @@ with pricing_data:
     st.write("Volatility or Standard Deviation is:", stddev, "%")
     st.write("Risk Adjusted Return: Sharpe Ratio : ", annual_return/stddev, "%")
 
-from alpha_vantage.fundamentaldata import FundamentalData  
-with fundatmental_data:
-    st.header("Fundamental Data")
-    key = 'LAIZ601ZA7O2FULW'
-    fd = FundamentalData(key, output_format='pandas')
-    st.subheader("Balance Sheet")
-    balance_sheet = fd.get_balance_sheet_annual(ticker)[0]
-    bs = balance_sheet.T[2:]
-    bs.columns = list(balance_sheet.T.iloc[0])
-    st.write(bs)
-    st.subheader("Income Statement")
-    income_statement = fd.get_income_statement_annual(ticker)[0]
-    is1 = income_statement.T[2:]
-    is1.columns = list(income_statement.T.iloc[0])
-    st.write(is1)
-    st.subheader("Cash Flow Statement")
-    cash_flow = fd.get_cash_flow_annual(ticker)[0]
-    cf = cash_flow.T[2:]
-    cf.columns = list(cash_flow.T.iloc[0])
-    st.write(cf)
+# from alpha_vantage.fundamentaldata import FundamentalData  
+# with fundatmental_data:
+#     st.header("Fundamental Data")
+#     key = 'MEXTIA4JSV3Q86XK'
+#     fd = FundamentalData(key, output_format='pandas')
+#     st.subheader("Balance Sheet")
+#     balance_sheet = fd.get_balance_sheet_annual(ticker)[0]
+#     bs = balance_sheet.T[2:]
+#     bs.columns = list(balance_sheet.T.iloc[0])
+#     st.write(bs)
+#     st.subheader("Income Statement")
+#     income_statement = fd.get_income_statement_annual(ticker)[0]
+#     is1 = income_statement.T[2:]
+#     is1.columns = list(income_statement.T.iloc[0])
+#     st.write(is1)
+#     st.subheader("Cash Flow Statement")
+#     cash_flow = fd.get_cash_flow_annual(ticker)[0]
+#     cf = cash_flow.T[2:]
+#     cf.columns = list(cash_flow.T.iloc[0])
+#     st.write(cf)
     
 from stocknews import StockNews
 with news:
