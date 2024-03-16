@@ -48,6 +48,6 @@ for i in range(int(number_of_months)):
     future_value *= (1 + monthly_rate)
 #future_value = monthly_investment * ((((1 + monthly_rate)**(number_of_months))-1) * (1 + monthly_rate))/monthly_rate
 
-st.markdown(f"## Amount invested per month: ₹{monthly_investment} \n ## Expected return rate: {return_rate}%\n ## Time period: {time_period} years")
-st.markdown(f"## Future value of investment:  ₹{int(future_value)}")
-st.markdown(f"## Total investment: ₹{monthly_investment * number_of_months}")
+st.markdown(f"### Amount invested per month: ₹{monthly_investment} \n ### Expected return rate: {return_rate}%\n ### Time period: {time_period} years")
+st.markdown(f"### Future value of investment:  ₹{int(future_value)}")
+st.markdown(f"### Total investment: ₹{monthly_investment * number_of_months}")
