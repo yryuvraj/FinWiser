@@ -135,10 +135,33 @@ elif sidebar_main == 'Window 1' :
         st.plotly_chart(df.plot_treemap())
 
 elif sidebar_main == 'Window 3' : 
-    st.markdown(
-            md.aboutpage()
-        ) 
-
+    monthly_income = st.number_input("Enter monthly income : ")
+    invest_amt = 0
+    use_amt = 0
+    save_amt = 0
+    if monthly_income > 200000:
+        invest_amt = 0.5 * monthly_income
+        use_amt = 0.3 * monthly_income
+        save_amt = 0.2 * monthly_income
+    elif monthly_income > 150000 and monthly_income < 200000:
+        invest_amt = 0.3 * monthly_income
+        use_amt = 0.5 * monthly_income
+        save_amt = 0.2 * monthly_income
+    elif monthly_income < 150000:
+        invest_amt = 0.2 * monthly_income
+        use_amt = 0.5 * monthly_income
+        save_amt = 0.3 * monthly_income
+    st.subheader(f"You should invest {int(invest_amt)}")
+    st.subheader(f"You should save {int(save_amt)}")
+    st.subheader(f"You should spend {int(use_amt)}")
+    L = [monthly_income, invest_amt, save_amt, use_amt]
+    submit = st.button("Submit")
+    if submit:
+        with open('pages/data/income.csv', 'w') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerow(['income','invest_amt','save_amt','spend_amt'])
+            writer_object.writerow(L)
+            f_object.close()
 else : 
     # dropdown
     col1, col2 = st.columns(2)
