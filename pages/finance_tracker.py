@@ -1,6 +1,8 @@
 import streamlit as st
 from pages.finance_tracker_data.finance import PersonalFinance
 import pages.finance_tracker_data.markdown as md
+from csv import writer
+from datetime import datetime
 df = PersonalFinance()
  
 PAGE_CONFIG = {"page_title":"Personal Finance", 
@@ -14,17 +16,36 @@ sidebar_main = st.sidebar.selectbox('Navigation', ['Home', 'Window 1', 'Window 2
  
 if sidebar_main == 'Home' : 
     st.title('Personal Finance Dashboard')
-    st.markdown("""
-        ##### text here
-    """)
 
     banner = md.headerSection()
     st.markdown(banner,unsafe_allow_html=True)
     
     st.markdown("""
-    ###### The dataset looks some what like this 
+    ## Enter Expense :  
     """)
-    st.dataframe(df.read_data('primary').tail())
+    #item_date = st.date_input("Enter date of expense : ")
+    now = datetime.now()
+    item_date = now.strftime("%m/%d/%Y")
+    print(item_date)
+    
+    option = st.selectbox(
+     'Choose type of expense: ',
+     ('Charity', 'Clothes', 'Food','Medicine','Study Materials','Travel',"Utilities","Wants"))
+    item_title = st.text_input("Enter name of expense : ")
+    item_price = st.number_input("Enter cost of expense : ")
+    submit = st.button("Submit")
+    L = [item_date,option,item_title,item_price]
+    print(L)
+
+    if submit:
+        with open('pages/data/data  - item.csv', 'a') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerow(L)
+            f_object.close()
+            print("Written da data")
+        
+
+
  
 elif sidebar_main == 'Window 1' : 
     st.title('Expense dashboard')
