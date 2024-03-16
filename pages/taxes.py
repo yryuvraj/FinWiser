@@ -38,9 +38,30 @@ st.markdown("""
     """, unsafe_allow_html=True)
 #rgb(56,182,255)
 
-st.markdown(f"##### [Please enter your income in the finance tracker, ignore if you have already updated it.]")
+st.markdown(f"##### \n[Please enter your income in the finance tracker, ignore if you have already updated it.]")
 st.markdown(f"## Your yearly income is: ₹{total_income}")
-st.markdown(f"## Taxes to be paid: ₹{tax_amount}")
+st.markdown(f"## Taxes calculated: ₹{tax_amount}")
 
+st.markdown("""
+    <div style='color: rgb(56,182,255); font-size: 25px;'>
+    You can claim the benefit of rebate under section 87A for FY 2022-23 under both the tax regimes, subject to the following conditions are satisfied:
+    You are a resident individual
+    Your total income after reducing the deductions under Chapter VI-A (Section 80C, 80D and so on) does not exceed Rs 5 lakh in a FY
+    The tax rebate is limited to Rs 12,500. If your total tax payable is less than Rs 12,500, you will not have to pay any tax.
+        
+    """, unsafe_allow_html=True)
+if tax_amount > 12500:
+    st.markdown(f"## Your total tax payable is ₹{tax_amount - 12500}")
+    tax_amount = tax_amount - 12500
+else:
+    st.markdown(f"## Your total tax payable is ₹0")
+    tax_amount = 0
+
+st.markdown("""
+    <div style='color: rgb(56,182,255); font-size: 25px;'>
+    The health and education cess is an additional tax that is levied by the Indian government to fund the education and healthcare needs of rural and below poverty line families in India. This tax is paid over and above the basic tax liability.
+    """, unsafe_allow_html=True)
+st.markdown(f"## Your total tax payable is ₹{tax_amount + (tax_amount * 0.04)}")
+tax_amount = tax_amount + (tax_amount * 0.04)
   
 
