@@ -3,12 +3,17 @@ import plotly.graph_objects as go
 from csv import writer
 from csv import reader
 
+
 st.header("Learn how your finances will be impacted if you take a new loan: ")
 goal = st.text_input("Enter loan title : ")
 P = st.number_input("Enter Loan amount : ")
 interest = st.number_input("Enter interest rate annually :  : ")
 interest = interest / 100
 interest /= 12
+labels = []
+sizes = []
+expenses = []
+expenses_amt = []
 emi = 0
 if goal:
     st.write(f"# {goal}")
@@ -28,13 +33,28 @@ if P != 0 and goal and interest != 0:
                     continue
             print(lines)
         lines[3] = float(lines[3])
-        st.markdown(f"###  Total Amount which will be left this month : {lines[3]-float(emi)}")
-    
-
-labels = ['Home','Electricity','Groceries']
+        st.markdown(f"###  Total Amount which will be left this month : {int(lines[3]-float(emi))}")
+    expenses = ['Charity', 'Clothes', 'Food','Medicine','Study Materials','Travel',"Utilities","Wants"]
+    expenses_amt = [0,0,0,0,0,0,0,0]
+    with open('pages/data/data  - item.csv', 'r') as f_object:
+        csvFile = reader(f_object)
+        for lines in csvFile:
+                for i in range(0,len(expenses)):
+                     print(expenses[i])
+                     print(lines[2])
+                     if expenses[i] == lines[1]:
+                          expenses_amt[i] += int(float(lines[3]))
+        print(lines)
+labels = expenses
 if goal:
     labels.append(goal)
-sizes = [30000, 1000, 5000, int(emi)]
+sizes = expenses_amt
+sizes.append(int(emi))
+labels.append(goal)
+for i in range(0,len(sizes)):
+    if i < len(sizes) and sizes[i] == 0:
+          labels.pop(i)
+          sizes.pop(i)
 
 fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
 fig.update_traces(hoverinfo='label+percent', textinfo='percent', textfont_size=20)
