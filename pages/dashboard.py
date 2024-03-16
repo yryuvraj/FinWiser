@@ -5,8 +5,9 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
-st.title("FinDash")
-ticker = st.sidebar.text_input("Enter Ticker")
+st.title("FinWiser")
+default_ticker = "F"
+ticker = st.sidebar.text_input("Enter Ticker", default_ticker)
 start_date = st.sidebar.date_input("Start Date")
 end_date = st.sidebar.date_input("End Date")
 
