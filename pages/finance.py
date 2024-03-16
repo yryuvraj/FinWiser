@@ -56,7 +56,42 @@ class PersonalFinance :
 
         return df 
     
+    def plot_expenses(self, value) :
+        
+        df = self.preprocess_dataframe()
+        
+        if value == 'date' : 
+            date_df = df.groupby(['date'])['price'].sum().reset_index()
+            fig = go.Figure(
+                data=go.Scatter(x=date_df['date'], 
+                y=date_df['price'],
+                mode='lines',
+                line_color='#eb4034')
+            )
 
+            fig.update_layout(plot_bgcolor="white")
+            return fig
+
+        elif value == 'month' : 
+            df['month_year'] = df['date'].dt.to_period('M')
+            dummy_df = df.groupby(['month_year', 'item_category'])['price'].sum().reset_index()
+            dummy_df.month_year = dummy_df.month_year.astype(str)
+            fig = px.bar(
+                dummy_df, 
+                x="month_year", 
+                y="price", 
+                color="item_category", 
+                text_auto= '.2s', 
+                color_discrete_sequence=["#D30000", "#FF5733", "#D70040", "#C41E3A", "#D22B2B", '#8B0000', '#FF3131', '#FF0000']
+            )
+            
+            monthly_spending_df = df.groupby(['month_year'])['price'].sum().reset_index()
+            curr_month = monthly_spending_df['price'].iloc[len(monthly_spending_df)-1]
+            prev_month = monthly_spending_df['price'].iloc[len(monthly_spending_df)-2]
+            percent = 100*((curr_month - prev_month)/prev_month)
+
+            return fig, round(percent,2), monthly_spending_df
+        
     def share_of_category(self) : 
         df = self.preprocess_dataframe()
         category_df = df.groupby(['item_category'])['price'].sum().reset_index()
