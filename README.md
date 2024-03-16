@@ -32,3 +32,8 @@ We welcome contributions from the community to make FinWiser even better! If you
 - Test your changes thoroughly.
 - Submit a pull request detailing the changes made and the problem solved.
 
+## Contributors
+* Yuvraj Rathi
+* Soham Kukreti
+* Satyam Rathi
+* Sanvi Sharma
