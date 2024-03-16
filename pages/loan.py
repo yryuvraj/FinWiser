@@ -1,5 +1,6 @@
 import streamlit as st
-import matplotlib.pyplot as plt 
+import plotly.graph_objects as go
+
 st.header("Learn how your finances will be impacted if you take a new loan: ")
 goal = st.text_input("Enter loan title : ")
 P = st.number_input("Enter Loan amount : ")
@@ -18,21 +19,14 @@ if P != 0 and goal and interest != 0:
     st.markdown(f"###  Estimated Monthly installment : {int(emi)}")
     st.markdown(f"###  Total Amount you will owe the lender will be : {int(amt_owned)}")
 
-fig, ax  = plt.subplots()
-fig.set_size_inches(10,10,forward=True)
 labels = ['Home','Electricity','Groceries']
-font = {'weight' : 'normal',
-        'size'   : 22}
+if goal:
+    labels.append(goal)
+sizes = [30000, 1000, 5000, int(emi)]
 
-plt.rc('font', **font)
-labels.append(goal)
-sizes = [30000, 1000, 5000, emi]
-plt.style.use('dark_background')
-ax.set_facecolor("black")
-# Create a pie chart
-ax.pie(sizes, labels=labels, autopct='%1.1f%%')
- 
-# Display the plot in Streamlit
+fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
+fig.update_traces(hoverinfo='label+percent', textinfo='percent', textfont_size=20)
+fig.update_layout(title_text='Monthly Expenses', title_font_size=24)
 agree = st.checkbox("Do you want to see your monthly expense pie chart? ")
 if agree:
-    st.pyplot(fig)
+    st.plotly_chart(fig)
