@@ -4,20 +4,27 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+import pandas_ta as ta
+from stocknews import StockNews
 
-st.title("FinWiser")
+st.title("FinWiser: Advanced Financial Dashboard")
+
+# Sidebar for user inputs
 default_ticker = "F"
 ticker = st.sidebar.text_input("Enter Ticker", default_ticker)
 start_date = st.sidebar.date_input("Start Date")
 end_date = st.sidebar.date_input("End Date")
 
+# Fetching stock data
 data = yf.download(ticker, start=start_date, end=end_date)
 
+# Line Chart
 fig = px.line(
-    data, x=data.index, y=data["Adj Close"], title="Time Series with Rangeslider"
+    data, x=data.index, y=data["Adj Close"], title=f"{ticker} - Adjusted Close Price"
 )
 st.plotly_chart(fig)
 
+# Candlestick Chart
 x = go.Figure(
     data=[
         go.Candlestick(
@@ -29,85 +36,102 @@ x = go.Figure(
         )
     ]
 )
-
-st.header("Candle Stick Chart")
-x.update_layout(title="Candlestick Chart")
+st.header("Candlestick Chart")
+x.update_layout(title=f"{ticker} - Candlestick Chart")
 st.plotly_chart(x)
 
-pricing_data, news, tech_indicator = st.tabs(
-    ["Pricing Data", "News", "Technical Indicators"]
+# Tabs for different features
+pricing_data, news, tech_indicator, advanced_analysis = st.tabs(
+    ["Pricing Data", "News", "Technical Indicators", "Advanced Analysis"]
 )
 
 with pricing_data:
-    st.header("Price Movements")
-    st.write("Highs and Lows, with proper rich data from Yahoo Finance API")
-    data2 = data
-    data2["%Change"] = data["Adj Close"] / data["Adj Close"].shift(1) - 1
-    st.write(data2)
+    st.header("Price Movements and Returns")
+    st.write("Detailed price movements and metrics:")
+    data["%Change"] = data["Adj Close"] / data["Adj Close"].shift(1) - 1
+    st.write(data)
 
-    annual_return = data2["%Change"].mean() * 252 * 100
-    # ignoring holidays-kyuki investor ko pagal banana hai (logic behind 252)
-    st.write(f"Annual Return: ", annual_return, "%")
+    annual_return = data["%Change"].mean() * 252 * 100
+    st.write(f"Annual Return: {annual_return:.2f}%")
 
-    stddev = np.std(data2["%Change"]) * np.sqrt(252) * 100
-    st.write("Volatility or Standard Deviation is:", stddev, "%")
-    st.write("Risk Adjusted Return: Sharpe Ratio : ", annual_return / stddev, "%")
+    stddev = np.std(data["%Change"]) * np.sqrt(252) * 100
+    st.write(f"Volatility (Standard Deviation): {stddev:.2f}%")
 
-# from alpha_vantage.fundamentaldata import FundamentalData
-# with fundatmental_data:
-#     st.header("Fundamental Data")
-#     key = 'MEXTIA4JSV3Q86XK'
-#     fd = FundamentalData(key, output_format='pandas')
-#     st.subheader("Balance Sheet")
-#     balance_sheet = fd.get_balance_sheet_annual(ticker)[0]
-#     bs = balance_sheet.T[2:]
-#     bs.columns = list(balance_sheet.T.iloc[0])
-#     st.write(bs)
-#     st.subheader("Income Statement")
-#     income_statement = fd.get_income_statement_annual(ticker)[0]
-#     is1 = income_statement.T[2:]
-#     is1.columns = list(income_statement.T.iloc[0])
-#     st.write(is1)
-#     st.subheader("Cash Flow Statement")
-#     cash_flow = fd.get_cash_flow_annual(ticker)[0]
-#     cf = cash_flow.T[2:]
-#     cf.columns = list(cash_flow.T.iloc[0])
-#     st.write(cf)
-
-from stocknews import StockNews
+    sharpe_ratio = annual_return / stddev
+    st.write(f"Risk-Adjusted Return (Sharpe Ratio): {sharpe_ratio:.2f}")
 
 with news:
-    st.header(f"News of {ticker}")
+    st.header(f"News for {ticker}")
     sn = StockNews(ticker, save_news=False)
     df_news = sn.read_rss()
-    for i in range(10):
-        st.subheader(f"News {i+1}")
+    for i in range(10):  # Display top 5 news articles
+        st.subheader(f"News {i + 1}")
         st.write(df_news["published"][i])
         st.write(df_news["title"][i])
         st.write(df_news["summary"][i])
-        title_sentiment = df_news["sentiment_title"][i]
-        st.write(f"Title Sentiment: {title_sentiment}")
-        news_sentiment = df_news["sentiment_summary"][i]
-        st.write(f"News Sentiment: {news_sentiment}")
-
-import pandas_ta as ta
+        st.write(f"Title Sentiment: {df_news['sentiment_title'][i]}")
+        st.write(f"News Sentiment: {df_news['sentiment_summary'][i]}")
 
 with tech_indicator:
     st.header("Technical Indicators")
-    df = pd.DataFrame()
-    ind_list = df.ta.indicators(as_list=True)
-    technical_indicator = st.selectbox("Select Indicator", options=ind_list)
-    method = technical_indicator
-    indicator = pd.DataFrame(
-        getattr(ta, method)(
-            low=data["Low"],
-            close=data["Close"],
-            high=data["High"],
-            open=data["Open"],
-            volume=data["Volume"],
-        )
-    )
-    indicator["Close"] = data["Close"]
-    xyz = px.line(indicator)
-    st.plotly_chart(xyz)
-    st.write(indicator)
+    st.write("Select and calculate popular indicators.")
+
+    # RSI Calculation
+    st.subheader("Relative Strength Index (RSI)")
+    rsi_period = st.slider("RSI Period", 7, 50, 14)
+    data["RSI"] = ta.rsi(data["Close"], length=rsi_period)
+    st.line_chart(data[["RSI"]])
+
+    # MACD Calculation
+    st.subheader("MACD")
+    macd = ta.macd(data["Close"])
+    data = pd.concat([data, macd], axis=1)
+    st.line_chart(data[["MACD_12_26_9", "MACDs_12_26_9", "MACDh_12_26_9"]])
+
+    # Bollinger Bands
+    st.subheader("Bollinger Bands")
+    bbands = ta.bbands(data["Close"], length=20, std=2.0)  # Default length and std
+    if bbands is not None:
+        data = pd.concat([data, bbands], axis=1)
+        bb_lower = bbands.columns[0]  # Dynamically fetch column names
+        bb_middle = bbands.columns[1]
+        bb_upper = bbands.columns[2]
+        st.line_chart(data[[bb_lower, bb_middle, bb_upper, "Close"]])
+    else:
+        st.warning("Bollinger Bands calculation failed. Ensure sufficient data is available.")
+
+with advanced_analysis:
+    st.header("Advanced Analysis")
+    
+    # Moving Average Convergence
+    st.subheader("Moving Averages")
+    ma_short = st.slider("Short-Term Moving Average Period", 5, 50, 20)
+    ma_long = st.slider("Long-Term Moving Average Period", 50, 200, 100)
+    data["Short_MA"] = data["Close"].rolling(window=ma_short).mean()
+    data["Long_MA"] = data["Close"].rolling(window=ma_long).mean()
+    ma_chart = px.line(data, x=data.index, y=["Short_MA", "Long_MA", "Close"], title="Moving Averages")
+    st.plotly_chart(ma_chart)
+
+    # Pattern Detection
+    st.subheader("Pattern Detection")
+    st.write("Detect head-and-shoulders or other patterns (future implementation).")
+    
+    # Statistical Insights
+    st.subheader("Statistical Insights")
+    st.write("Descriptive statistics for the selected stock:")
+    st.write(data.describe())
+
+    # Improved Custom Indicator
+    st.subheader("Custom Indicator")
+    st.write("Build your own analysis metrics using column names like 'Open', 'Close', 'High', 'Low', and 'Volume'.")
+    
+    # Display column names as a guide
+    st.write("Available columns: ", list(data.columns))
+    
+    custom_formula = st.text_input("Enter custom formula (e.g., (Close - Open) / Volume):")
+    try:
+        # Evaluate the formula with the DataFrame context
+        data["Custom_Indicator"] = data.eval(custom_formula)
+        st.line_chart(data["Custom_Indicator"])
+    except Exception as e:
+        st.error(f"Error in formula: {e}")
