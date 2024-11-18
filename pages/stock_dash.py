@@ -9,22 +9,20 @@ from stocknews import StockNews
 
 st.title("FinWiser: Advanced Financial Dashboard")
 
-# Sidebar for user inputs
+
 default_ticker = "F"
 ticker = st.sidebar.text_input("Enter Ticker", default_ticker)
 start_date = st.sidebar.date_input("Start Date")
 end_date = st.sidebar.date_input("End Date")
 
-# Fetching stock data
+
 data = yf.download(ticker, start=start_date, end=end_date)
 
-# Line Chart
 fig = px.line(
     data, x=data.index, y=data["Adj Close"], title=f"{ticker} - Adjusted Close Price"
 )
 st.plotly_chart(fig)
 
-# Candlestick Chart
 x = go.Figure(
     data=[
         go.Candlestick(
@@ -40,7 +38,7 @@ st.header("Candlestick Chart")
 x.update_layout(title=f"{ticker} - Candlestick Chart")
 st.plotly_chart(x)
 
-# Tabs for different features
+
 pricing_data, news, tech_indicator, advanced_analysis = st.tabs(
     ["Pricing Data", "News", "Technical Indicators", "Advanced Analysis"]
 )
@@ -64,7 +62,7 @@ with news:
     st.header(f"News for {ticker}")
     sn = StockNews(ticker, save_news=False)
     df_news = sn.read_rss()
-    for i in range(10):  # Display top 5 news articles
+    for i in range(10):  
         st.subheader(f"News {i + 1}")
         st.write(df_news["published"][i])
         st.write(df_news["title"][i])
@@ -76,24 +74,24 @@ with tech_indicator:
     st.header("Technical Indicators")
     st.write("Select and calculate popular indicators.")
 
-    # RSI Calculation
+    
     st.subheader("Relative Strength Index (RSI)")
     rsi_period = st.slider("RSI Period", 7, 50, 14)
     data["RSI"] = ta.rsi(data["Close"], length=rsi_period)
     st.line_chart(data[["RSI"]])
 
-    # MACD Calculation
+    
     st.subheader("MACD")
     macd = ta.macd(data["Close"])
     data = pd.concat([data, macd], axis=1)
     st.line_chart(data[["MACD_12_26_9", "MACDs_12_26_9", "MACDh_12_26_9"]])
 
-    # Bollinger Bands
+    
     st.subheader("Bollinger Bands")
-    bbands = ta.bbands(data["Close"], length=20, std=2.0)  # Default length and std
+    bbands = ta.bbands(data["Close"], length=20, std=2.0)  
     if bbands is not None:
         data = pd.concat([data, bbands], axis=1)
-        bb_lower = bbands.columns[0]  # Dynamically fetch column names
+        bb_lower = bbands.columns[0]  
         bb_middle = bbands.columns[1]
         bb_upper = bbands.columns[2]
         st.line_chart(data[[bb_lower, bb_middle, bb_upper, "Close"]])
@@ -103,7 +101,7 @@ with tech_indicator:
 with advanced_analysis:
     st.header("Advanced Analysis")
     
-    # Moving Average Convergence
+    
     st.subheader("Moving Averages")
     ma_short = st.slider("Short-Term Moving Average Period", 5, 50, 20)
     ma_long = st.slider("Long-Term Moving Average Period", 50, 200, 100)
@@ -112,25 +110,25 @@ with advanced_analysis:
     ma_chart = px.line(data, x=data.index, y=["Short_MA", "Long_MA", "Close"], title="Moving Averages")
     st.plotly_chart(ma_chart)
 
-    # Pattern Detection
+    
     st.subheader("Pattern Detection")
     st.write("Detect head-and-shoulders or other patterns (future implementation).")
     
-    # Statistical Insights
+    
     st.subheader("Statistical Insights")
     st.write("Descriptive statistics for the selected stock:")
     st.write(data.describe())
 
-    # Improved Custom Indicator
+    
     st.subheader("Custom Indicator")
     st.write("Build your own analysis metrics using column names like 'Open', 'Close', 'High', 'Low', and 'Volume'.")
     
-    # Display column names as a guide
+    
     st.write("Available columns: ", list(data.columns))
     
     custom_formula = st.text_input("Enter custom formula (e.g., (Close - Open) / Volume):")
     try:
-        # Evaluate the formula with the DataFrame context
+        
         data["Custom_Indicator"] = data.eval(custom_formula)
         st.line_chart(data["Custom_Indicator"])
     except Exception as e:
